@@ -1,0 +1,16 @@
+{
+    "name": "theskiel/dmw-auth",
+    "authors": [
+        {
+            "name": "POTCHONA Justin",
+            "email": "potchjust@gmail.com"
+        }
+    ],
+
+    "require": {},
+     "autoload": {
+         "psr-4": {
+             "Dreamwear\\": "src/"
+         }
+     }
+}
