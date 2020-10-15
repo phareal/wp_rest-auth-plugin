@@ -21,7 +21,21 @@ class Authentication
 
             $loginStatus = wp_authenticate($request->get_param('username'),$request->get_param('password'));
 
-            return  $loginStatus;
+
+            if ($loginStatus->has_errors()){
+                return wp_send_json_error([
+                    'message'=>$loginStatus->get_error_message()
+                ]);
+            }else{
+                $response = json_decode(json_encode($loginStatus->data));
+                unset($response->user_activation_key);
+                unset($response->user_status);
+                unset($response->user_pass);
+                unset($response->user_url);
+                unset($response->user_nicename);
+                return wp_send_json_error($response);
+            }
+
 
 
         }
