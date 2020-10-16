@@ -25,6 +25,12 @@ class DreamwearRestEndpoint extends  WP_REST_Controller
            'callback'            => array($this->auth,'login'),
            'args'                => $this->get_collection_params(),
        ]);
+
+       register_rest_route($this->namespace,'/register',[
+           'methods'             => WP_REST_Server::CREATABLE,
+           'callback'            => array($this->auth,'register'),
+           'args'                => $this->get_collection_params(),
+       ]);
     }
 
 

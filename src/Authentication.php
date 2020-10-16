@@ -7,10 +7,6 @@ class Authentication
 {
 
     public function login(\WP_REST_Request  $request){
-        $dd = 0;
-
-
-
 
         if (!$this->checkExistingUser($request->get_param('username'))){
             return wp_send_json_error([
@@ -52,6 +48,28 @@ class Authentication
         }else{
             return  false;
         }
+    }
+
+
+    public function register(\WP_REST_Request  $request){
+        if (!$this->checkExistingUser($request->get_param('email'))){
+            /*$registerStatus = wp_create_user($request->get_param('email'),$request->get_param('email'),$request->get_param('username'));
+            return  $registerStatus;*/
+            //send_smtp_email($request->get_param('email'),Utils::random_password());
+            $headers = array('Content-Type: text/html; charset=UTF-8');
+            wp_mail('potchjust@gmail.com','Notification de création de compte',
+                Utils::generateHtmlTemplate($request->get_param('email'),
+                    Utils::random_password()),$headers);
+            return  Utils::random_password();
+
+
+        }else{
+            return wp_send_json_error([
+                'message_fr'=>"Ce nom d'utilisateur ou email est déja utilisé ",
+            ]);
+
+        }
+
     }
 
 }
