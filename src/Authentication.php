@@ -54,34 +54,29 @@ class Authentication
 
 
     public function register(\WP_REST_Request  $request){
-        if (!$this->checkExistingUser($request->get_param('email'))){
+        if (!$this->checkExistingUser($request->get_param('email')))
+        {
             $password =  Utils::random_password();
             $headers = array('Content-Type: text/html; charset=UTF-8');
             $registerStatus = wp_create_user($request->get_param('email'),$password,$request->get_param('email'));
 
-            if (!is_null($registerStatus)){
-                try {
-                    $emailSent = wp_mail($request->get_param('email'),'Notification de création de compte',
-                        Utils::generateHtmlTemplate($request->get_param('email'),
-                            $password),$headers);
-                     return  wp_send_json_success([
-                     "ID"=>$registerStatus,
-                         'emailSent'=>$emailSent
-                 ]);
-                }catch (Exception $error){
-                    return  $error->getMessage();
-                }
 
+            if (!is_int($registerStatus) && $registerStatus->has_errors() ){
+                return wp_send_json_error([
+                    'message'=>$registerStatus->get_error_message()
+                ]);
             }else{
-                return  $registerStatus;
+                return wp_send_json_success([
+                    'id'=>$registerStatus,
+                    'message'=>"l'inscription s'est déroulé avec succès"
+                ]);
             }
 
-
-        }else{
+        }
+        else {
             return wp_send_json_error([
                 'message_fr'=>"Ce nom d'utilisateur ou email est déja utilisé ",
             ]);
-
         }
 
     }
