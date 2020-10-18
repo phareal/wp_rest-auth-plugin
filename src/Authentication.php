@@ -56,23 +56,22 @@ class Authentication
     public function register(\WP_REST_Request  $request){
         if (!$this->checkExistingUser($request->get_param('email'))){
             $password =  Utils::random_password();
-            $registerStatus = wp_create_user($request->get_param('email'),$password,$request->get_param('username'));
+            $headers = array('Content-Type: text/html; charset=UTF-8');
+            $registerStatus = wp_create_user($request->get_param('email'),$password,$request->get_param('email'));
 
             if (!is_null($registerStatus)){
                 try {
-                    $emailSent = wp_mail("potchjust@gmail.com",'Notification de création de compte',
+                    $emailSent = wp_mail($request->get_param('email'),'Notification de création de compte',
                         Utils::generateHtmlTemplate($request->get_param('email'),
-                            $password));
-                    return $emailSent;
+                            $password),$headers);
+                     return  wp_send_json_success([
+                     "ID"=>$registerStatus,
+                         'emailSent'=>$emailSent
+                 ]);
                 }catch (Exception $error){
                     return  $error->getMessage();
                 }
 
-
-               /* return  wp_send_json_success([
-                    "ID"=>$registerStatus,
-                    "email"=>$emailSent
-                ]);*/
             }else{
                 return  $registerStatus;
             }
