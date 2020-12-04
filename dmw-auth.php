@@ -1,10 +1,10 @@
 <?php
 
 /*
-Plugin Name: Dmw Auth
-Description: A plugin for helping the registering through the api
+Plugin Name: Dmw A
+Description: A plugin containing helpers for some rest api actions
 Version: 1.0
-Author: Dreamwear
+Author: POTCHONA Essosolam Justin
 Author URI: http://dreamwear.co
 License: A "Slug" license name e.g. GPL2
 */
